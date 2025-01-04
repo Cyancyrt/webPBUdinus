@@ -64,7 +64,7 @@ include 'config.php';
       <div class="row row-cols-1 row-cols-md-4 g-4">
         <?php
         global $conn;
-        $sql = "SELECT * FROM artikel";
+        $sql = "SELECT * FROM artikel LIMIT 4";
         $hasil1 = $conn->query($sql);
         //menghitung jumlah baris data article
         $jumlah_article = $hasil1->num_rows;
@@ -75,7 +75,7 @@ include 'config.php';
         ?>
         <div class="col">
           <div class="card h-100 justify-content-center">
-            <img src="<?= $row['gambar']; ?>" class="card-img-top" alt="...">
+            <img src="gambar/<?= $row['gambar']; ?>" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title"><?= $row['judul']; ?></h5>
               <p class="card-text"><?= $row['excerpt']; ?></p>
@@ -108,6 +108,18 @@ include 'config.php';
           <div class="carousel-item">
             <img src="https://wallpapercave.com/wp/wp11215575.jpg" class="d-block w-50 mx-auto my-auto" alt="...">
           </div>
+          <?php
+          global $conn;
+          $sql = "SELECT * FROM galeri";
+          $hasil1 = $conn->query($sql);
+          while($row = $hasil1->fetch_assoc()){
+            
+          
+          ?>
+          <div class="carousel-item">
+            <img src="gambar/<?= $row['URL']; ?>" class="d-block w-50 mx-auto my-auto" alt="...">
+          </div>
+          <?php }  ?>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -117,9 +129,6 @@ include 'config.php';
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Next</span>
         </button>
-      </div>
-      <div class="lainnya">
-        <a href="artikel.html" class="btn btn-sm btn-outline-primary mt-3">lainnya...</a>
       </div>
     </aside>
     <section id="schedule" class="py-5">
@@ -311,7 +320,7 @@ include 'config.php';
             class="justify-content-center align-items-center shadow-lg align-items-center border border-black border-opacity-50 rounded-circle overflow-hidden mb-4"
             style="width: 300px; height: 300px; margin: 0 auto"
           >
-            <img src="Danendra Altaf.png" alt="Foto Mahasiswa" class="img-fluid" />
+            <img src="gambar/Danendra Altaf.png" alt="Foto Mahasiswa" class="img-fluid" />
           </div>
         </div>
 

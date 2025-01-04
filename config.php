@@ -1,6 +1,6 @@
 <?php 
 // Koneksi database
-$conn = mysqli_connect("localhost", username: "root", "", "a11202315022");
+$conn = mysqli_connect("localhost",  "root", "", "a11202315022");
 
 // Cek koneksi
 if (!$conn) {

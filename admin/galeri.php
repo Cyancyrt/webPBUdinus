@@ -1,36 +1,57 @@
-<div class="container">
+
+<div class="container mt-3">
     <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#modalTambah">
-        <i class="bi bi-plus-lg"></i> Tambah Article
+        <i class="bi bi-plus-lg"></i> Tambah Gambar
     </button>
     <div class="row">
-        <div class="table-responsive" id="article_data">
+        <div class="table-responsive" id="gambar_data">
         </div>
     </div>
+    
 </div>
 
 
+<script>
+$(document).ready(function(){
+    load_data();
+    function load_data(hlm){
+        $.ajax({
+            url : "galeri_data.php",
+            method : "POST",
+            data : {
+                hlm: hlm
+				           },
+            success : function(data){   
+                    $('#gambar_data').html(data);
+            }
+        })
+    }
+    $(document).on('click', '.halaman', function(){
+    var hlm = $(this).attr("id");
+    load_data(hlm);
+}); 
+});
+</script>
 <!-- Modal -->
 <!-- Awal Modal Tambah-->
 <div class="modal fade" id="modalTambah" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Article</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Gambar</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" action="" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="formGroupExampleInput" class="form-label">Judul</label>
-                        <input type="text" class="form-control" name="judul" placeholder="Tuliskan Judul Artikel" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="floatingTextarea2">Isi</label>
-                        <textarea class="form-control" placeholder="Tuliskan Isi Artikel" name="isi" required></textarea>
-                    </div>
-                    <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Gambar</label>
                         <input type="file" class="form-control" name="gambar">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput2" class="form-label">Deskripsi</label>
+                        <input type="text" class="form-control" name="deskripsi">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -42,49 +63,16 @@
     </div>
 </div>
 
-<!-- Akhir Modal Tambah-->
-<script>
-$(document).ready(function(){
-    load_data();
-    function load_data(hlm){
-        $.ajax({
-            url : "article_data.php",
-            method : "POST",
-            data : {
-					            hlm: hlm
-				           },
-            success : function(data){   
-                    $('#article_data').html(data);
-            }
-        })
-    }
-    $(document).on('click', '.halaman', function(){
-    var hlm = $(this).attr("id");
-    load_data(hlm);
-}); 
-});
-</script>
-
 <?php
 include "upload_foto.php";
 
 //jika tombol simpan diklik
 if (isset($_POST['simpan'])) {
-    $judul = $_POST['judul'];
-    $isi = $_POST['isi'];
+    $desk = $_POST['deskripsi'];
     $tanggal = date("Y-m-d H:i:s");
     $username = $_SESSION['username'];
     $gambar = '';
     $nama_gambar = $_FILES['gambar']['name'];
-
-    $maxLength = 50; // Panjang maksimal excerpt (dalam karakter)
-    $excerpt = '';
-    // Potong teks jika lebih panjang dari $maxLength
-    if (strlen($isi) > $maxLength) {
-        $excerpt = substr($isi, 0, $maxLength) . "...";
-    } else {
-        $excerpt = $isi;
-    }
 
     //jika ada file yang dikirim  
     if ($nama_gambar != '') {
@@ -100,7 +88,7 @@ if (isset($_POST['simpan'])) {
 		        //jika true maka message berisi pesan error, tampilkan dalam alert
             echo "<script>
                 alert('" . $cek_upload['message'] . "');
-                document.location='index.php?page=artikel';
+                document.location='index.php?page=galeri';
             </script>";
             die;
         }
@@ -110,6 +98,7 @@ if (isset($_POST['simpan'])) {
     if (isset($_POST['id'])) {
         //jika ada id,    lakukan update data dengan id tersebut
         $id = $_POST['id'];
+        echo($id);
 
         if ($nama_gambar == '') {
             //jika tidak ganti gambar
@@ -119,37 +108,34 @@ if (isset($_POST['simpan'])) {
             unlink("../gambar/" . $_POST['gambar_lama']);
         }
 
-        $stmt = $conn->prepare("UPDATE artikel 
+        $stmt = $conn->prepare("UPDATE galeri 
                                 SET 
-                                judul =?,
-                                isi =?,
-                                excerpt =?,
-                                gambar = ?,
-                                tanggal = ?,
-                                penulis = ?
+                                URL = ?,
+                                deskripsi = ?,
+                                tanggal = ?
                                 WHERE id = ?");
 
-        $stmt->bind_param("ssssssi", $judul, $isi,$excerpt, $gambar, $tanggal, $username, $id);
+        $stmt->bind_param("sssi",  $gambar,  $desk,$tanggal, $id);
         $simpan = $stmt->execute();
         echo($simpans);
     } else {
 		    //jika tidak ada id, lakukan insert data baru
-        $stmt = $conn->prepare("INSERT INTO artikel (judul,isi,excerpt,gambar,tanggal,penulis)
-                                VALUES (?,?,?,?,?)");
+        $stmt = $conn->prepare("INSERT INTO galeri (URL,deskripsi,tanggal)
+                                VALUES (?,?,?)");
 
-        $stmt->bind_param("ssssss", $judul, $isi,$excerpt, $gambar, $tanggal, $username);
+        $stmt->bind_param("sss",   $gambar, $desk,$tanggal );
         $simpan = $stmt->execute();
     }
 
     if ($simpan) {
         echo "<script>
             alert('Simpan data sukses');
-            document.location='index.php?page=artikel';
+            document.location='index.php?page=galeri';
         </script>";
     } else {
         echo "<script>
             alert('Simpan data gagal');
-            document.location='index.php?page=artikel';
+            document.location='index.php?page=galeri';
         </script>";
     }
 
@@ -164,10 +150,10 @@ if (isset($_POST['hapus'])) {
 
     if ($gambar != '') {
         //hapus file gambar
-        unlink("./gambar/" . $gambar);
+        unlink("../gambar/" . $gambar);
     }
 
-    $stmt = $conn->prepare("DELETE FROM artikel WHERE id =?");
+    $stmt = $conn->prepare("DELETE FROM galeri WHERE id =?");
 
     $stmt->bind_param("i", $id);
     $hapus = $stmt->execute();
@@ -175,12 +161,12 @@ if (isset($_POST['hapus'])) {
     if ($hapus) {
         echo "<script>
             alert('Hapus data sukses');
-            document.location='index.php?page=artikel';
+            document.location='index.php?page=galeri';
         </script>";
     } else {
         echo "<script>
             alert('Hapus data gagal');
-            document.location='index.php?page=artikel';
+            document.location='index.php?page=galeri';
         </script>";
     }
 
