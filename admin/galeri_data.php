@@ -40,7 +40,7 @@ while ($row = $hasil->fetch_assoc()) {
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Article</h1>
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit gambar</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <form method="post" action="" enctype="multipart/form-data">
@@ -83,13 +83,13 @@ while ($row = $hasil->fetch_assoc()) {
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Konfirmasi Hapus Article</h1>
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Konfirmasi Hapus Gambar</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <form method="post" action="" enctype="multipart/form-data">
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="formGroupExampleInput" class="form-label">Yakin akan menghapus artikel "<strong><?= $row["deskripsi"] ?></strong>"?</label>
+                                        <label for="formGroupExampleInput" class="form-label">Yakin akan menghapus gambar "<strong><?= $row["deskripsi"] ?></strong>"?</label>
                                         <input type="hidden" name="id" value="<?= $row["id"] ?>">
                                         <input type="hidden" name="gambar" value="<?= $row["URL"] ?>">
                                     </div>
@@ -113,7 +113,7 @@ $sql1 = "SELECT * FROM galeri";
 $hasil1 = $conn->query($sql1); 
 $total_records = $hasil1->num_rows;
 ?>
-<p>Total article : <?php echo $total_records; ?></p>
+<p>Total gambar : <?php echo $total_records; ?></p>
 <nav class="mb-2">
     <ul class="pagination justify-content-end">
     <?php

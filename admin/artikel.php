@@ -135,7 +135,7 @@ if (isset($_POST['simpan'])) {
     } else {
 		    //jika tidak ada id, lakukan insert data baru
         $stmt = $conn->prepare("INSERT INTO artikel (judul,isi,excerpt,gambar,tanggal,penulis)
-                                VALUES (?,?,?,?,?)");
+                                VALUES (?,?,?,?,?,?)");
 
         $stmt->bind_param("ssssss", $judul, $isi,$excerpt, $gambar, $tanggal, $username);
         $simpan = $stmt->execute();
